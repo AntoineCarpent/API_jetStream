@@ -37,18 +37,19 @@ class UsersController extends Controller
      * @param Request $request
      * @return User
      */
-    public function register(StoreUsersRequest $request)
+    public function store(StoreUsersRequest $request)
     {
         try {
             //Validated
             $validateUser = Validator::make($request->all(),
-            [
-                'name' => 'required',
-                'email' => 'required|email|unique:users,email',
-                'password' => ['required', 'string', Password::default(), 'confirmed'],
-            ]);
+                [
+                    'name' => 'required',
+                    'email' => 'required|email|unique:users,email',
+                    'password' => 'required|min:6|confirmed',
+                    'password_confirmation' => 'required|min:6'
+                ]);
 
-            if($validateUser->fails()){
+            if ($validateUser->fails()) {
                 return response()->json([
                     'status' => false,
                     'message' => 'validation error',
@@ -66,13 +67,13 @@ class UsersController extends Controller
                 'status' => true,
                 'message' => 'User Created Successfully',
                 'token' => $user->createToken("API TOKEN")->plainTextToken
-            ],200);
+            ], 200);
 
-            } catch (\Throwable $th){
+        } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
                 'message' => $th->getMessage()
-            ],500);
+            ], 500);
         }
     }
 
@@ -81,7 +82,8 @@ class UsersController extends Controller
      * @param Request $request
      * @return User
      */
-    public function login(Request $request)
+    public
+    function login(Request $request)
     {
         try {
             $validateUser = Validator::make($request->all(),
@@ -90,7 +92,7 @@ class UsersController extends Controller
                     'password' => 'required'
                 ]);
 
-            if($validateUser->fails()){
+            if ($validateUser->fails()) {
                 return response()->json([
                     'status' => false,
                     'message' => 'validation error',
@@ -98,7 +100,7 @@ class UsersController extends Controller
                 ], 401);
             }
 
-            if(!Auth::attempt($request->only(['email', 'password']))){
+            if (!Auth::attempt($request->only(['email', 'password']))) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Email & Password does not match with our record.',
@@ -107,11 +109,16 @@ class UsersController extends Controller
 
             $user = User::where('email', $request->email)->first();
 
+            if (Auth('sanctum')->check()) {
+                Auth()->user()->tokens()->delete();
+            }
+
             return response()->json([
                 'status' => true,
                 'message' => 'User Logged In Successfully',
-                'token' => $user->createToken("API TOKEN")->plainTextToken
+                'token' => Auth::user()->createToken("API TOKEN")->plainTextToken
             ], 200);
+
 
         } catch (\Throwable $th) {
             return response()->json([
@@ -124,7 +131,8 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public
+    function show($id)
     {
         return User::find($id);
     }
@@ -132,7 +140,8 @@ class UsersController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $users)
+    public
+    function edit(User $users)
     {
         //
     }
@@ -140,15 +149,20 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUsersRequest $request, User $users)
+    public
+    function update(UpdateUsersRequest $request, $id)
     {
-        //
+        $user = User::find($id);
+        $user->update($request->all());
+
+        return ('User update');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public
+    function destroy($id)
     {
         $users = User::find($id);
         $users->delete();

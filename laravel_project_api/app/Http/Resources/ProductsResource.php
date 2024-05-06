@@ -20,6 +20,8 @@ class ProductsResource extends JsonResource
             'description' => $this->description,
             'price' => $this->price,
             'stock' => $this->stock,
+            'image' => $this->image,
+            'category' => $this->categories->pluck('name'),
         ];
     }
 }

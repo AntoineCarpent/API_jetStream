@@ -17,6 +17,8 @@ use App\Http\Controllers\Api\CategoryController;
 Route::prefix('v1')->group(function () {
 
     Route::Resource('welcome', WelcomeController::class);
+    Route::get('/welcome/category/{id}', [WelcomeController::class, 'welcomecategory']
+    )->name('welcome.category');
 
     Route::Resource('products', ProductsController::class)->middleware('auth:sanctum');
 

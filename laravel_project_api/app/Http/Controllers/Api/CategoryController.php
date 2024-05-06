@@ -11,7 +11,19 @@ use App\Models\Category;
 class CategoryController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/v1/categories",
+     *     summary="Get list of categories",
+     *     tags={"Categories"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of categories",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/Category")
+     *         )
+     *     )
+     * )
      */
     public function index()
     {
@@ -20,15 +32,23 @@ class CategoryController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/v1/categories",
+     *     summary="Create a new category",
+     *     tags={"Category"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="description", type="string"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Category created successfully",
+     *         @OA\JsonContent(type="string", example="Category created")
+     *     )
+     * )
      */
     public function store(StoreCategoryRequest $request)
     {
@@ -41,11 +61,27 @@ class CategoryController extends Controller
         $categories->description = $request->description;
         $categories->save();
 
-        return ('Category create');
+        return response()->json("Category created", 200);
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/v1/categories/{id}",
+     *     summary="Get a specific category by ID",
+     *     tags={"Category"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the category",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Category details",
+     *         @OA\JsonContent(ref="#/components/schemas/Category")
+     *     )
+     * )
      */
     public function show($id)
     {
@@ -53,15 +89,30 @@ class CategoryController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Category $category)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/v1/categories/{id}",
+     *     summary="Update an existing category",
+     *     tags={"Category"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the category",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="description", type="string"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Category updated successfully",
+     *         @OA\JsonContent(type="string", example="Category updated")
+     *     )
+     * )
      */
     public function update(UpdateCategoryRequest $request, $id)
     {
@@ -71,16 +122,31 @@ class CategoryController extends Controller
         ]);
         $categories = Category::find($id);
         $categories->update($request->all());
-        return ('Category update');
+        return response()->json("Category updated", 200);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/v1/categories/{id}",
+     *     summary="Delete an existing category",
+     *     tags={"Category"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the category",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Category deleted successfully"
+     *     )
+     * )
      */
     public function destroy($id)
     {
         $categories = Category::find($id);
         $categories->delete();
-        return response("destroy", 204);
+        return response(null, 204);
     }
 }

@@ -16,26 +16,63 @@ use Illuminate\Validation\Rules\Password;
 class UsersController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/v1/users",
+     *     summary="Get list of users",
+     *     tags={"Users"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of users",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/User")
+     *         )
+     *     )
+     * )
      */
     public function index()
     {
-        $posts = User::all();
-        return UsersResource::collection($posts);
+        $users = User::all();
+        return UsersResource::collection($users);
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Create User
-     * @param Request $request
-     * @return User
+     * @OA\Post(
+     *     path="/api/v1/users",
+     *     summary="Create a new user",
+     *     tags={"Users"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="email", type="string"),
+     *             @OA\Property(property="password", type="string", format="password"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="User created successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="errors", type="object"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string"),
+     *         )
+     *     )
+     * )
      */
     public function store(StoreUsersRequest $request)
     {
@@ -78,12 +115,45 @@ class UsersController extends Controller
     }
 
     /**
-     * Login The User
-     * @param Request $request
-     * @return User
+     * @OA\Post(
+     *     path="/api/v1/users/login",
+     *     summary="Login user",
+     *     tags={"Users"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="email", type="string"),
+     *             @OA\Property(property="password", type="string", format="password"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="User logged in successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="token", type="string"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Invalid credentials",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string"),
+     *         )
+     *     )
+     * )
      */
-    public
-    function login(Request $request)
+    public function login(Request $request)
     {
         try {
             $validateUser = Validator::make($request->all(),
@@ -119,7 +189,6 @@ class UsersController extends Controller
                 'token' => Auth::user()->createToken("API TOKEN")->plainTextToken
             ], 200);
 
-
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -129,44 +198,135 @@ class UsersController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/v1/users/{id}",
+     *     summary="Get a specific user by ID",
+     *     tags={"Users"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the user",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="User details",
+     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string"),
+     *         )
+     *     )
+     * )
      */
-    public
-    function show($id)
-    {
-        return User::find($id);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public
-    function edit(User $users)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public
-    function update(UpdateUsersRequest $request, $id)
+    public function show($id)
     {
         $user = User::find($id);
-        $user->update($request->all());
-
-        return ('User update');
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found'
+            ], 404);
+        }
+        return new UsersResource($user);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Put(
+     *     path="/api/v1/users/{id}",
+     *     summary="Update an existing user",
+     *     tags={"Users"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the user",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="email", type="string"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="User updated successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string"),
+     *         )
+     *     )
+     * )
      */
-    public
-    function destroy($id)
+    public function update(UpdateUsersRequest $request, $id)
     {
-        $users = User::find($id);
-        $users->delete();
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found'
+            ], 404);
+        }
+        $user->update($request->all());
+        return new UsersResource($user);
+    }
 
-        return response("destroy", 204);
+    /**
+     * @OA\Delete(
+     *     path="/api/v1/users/{id}",
+     *     summary="Delete an existing user",
+     *     tags={"Users"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the user",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="User deleted successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string"),
+     *         )
+     *     )
+     * )
+     */
+    public function destroy($id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found'
+            ], 404);
+        }
+        $user->delete();
+        return response(null, 204);
     }
 }

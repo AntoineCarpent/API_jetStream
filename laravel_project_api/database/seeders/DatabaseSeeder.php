@@ -49,7 +49,7 @@ class DatabaseSeeder extends Seeder
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
             'price' => '20',
             'stock' => '100',
-            'image' => fake()->randomelement(['image/ZvbTwpiFRQvtDUnkBsSyg2gNbb3MtHvWYqULL7rO.jpg']),
+            'image' => fake()->randomelement(['storage/image/ZvbTwpiFRQvtDUnkBsSyg2gNbb3MtHvWYqULL7rO.jpg']),
 
         ])->categories()->attach($dinks);
 
@@ -58,7 +58,7 @@ class DatabaseSeeder extends Seeder
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
             'price' => '20',
             'stock' => '100',
-            'image' => fake()->randomelement(['image/GzWL4e9dHRSmWnQ3WyrmqVrhRsCNf2e2bi3dlIhf.webp']),
+            'image' => fake()->randomelement(['storage/image/GzWL4e9dHRSmWnQ3WyrmqVrhRsCNf2e2bi3dlIhf.webp']),
 
         ])->categories()->attach($dinks);
 
@@ -67,7 +67,7 @@ class DatabaseSeeder extends Seeder
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
             'price' => '20',
             'stock' => '100',
-            'image' => fake()->randomelement(['image/kHvsTzgDwdk9exE3Sc7lygv9m0O0U0mtKygJ6uUa.jpg']),
+            'image' => fake()->randomelement(['storage/image/kHvsTzgDwdk9exE3Sc7lygv9m0O0U0mtKygJ6uUa.jpg']),
 
         ])->categories()->attach($dinks);
 
@@ -76,7 +76,7 @@ class DatabaseSeeder extends Seeder
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
             'price' => '20',
             'stock' => '100',
-            'image' => fake()->randomelement(['image/cduU3W646A9hzYzBob0g8UKB0KXVMtyLp8ZTykhR.jpg']),
+            'image' => fake()->randomelement(['storage/image/cduU3W646A9hzYzBob0g8UKB0KXVMtyLp8ZTykhR.jpg']),
 
         ])->categories()->attach($dinks);
 
@@ -85,7 +85,7 @@ class DatabaseSeeder extends Seeder
             'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
             'price' => '20',
             'stock' => '100',
-            'image' => fake()->randomelement(['image/Mt3OFXQXX2mWu2NqhcZcYETuE4IWfhoI9GDmHOSu.jpg']),
+            'image' => fake()->randomelement(['storage/image/Mt3OFXQXX2mWu2NqhcZcYETuE4IWfhoI9GDmHOSu.jpg']),
 
         ])->categories()->attach($dinks);
 //        <--------------------Salty food-------------------------------------------------------->

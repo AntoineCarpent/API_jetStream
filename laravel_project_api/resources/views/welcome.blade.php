@@ -904,6 +904,8 @@
                         <h2 class="text-xl font-semibold text-black dark:text-white">{{$post->name}}</h2>
 
                         <p class="text mt-4 text-sm/relaxed">{{$post->description}}</p>
+
+                        <img src="{{$post->image}}" alt="">
                     </div>
                 @endforeach
             </main>

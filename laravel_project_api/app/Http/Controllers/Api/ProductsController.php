@@ -183,6 +183,7 @@ class ProductsController extends Controller
         if (request('image')){
 
             $products->update([
+
                 'image' => request('image')->store('image', 'public'),
             ]);
         }

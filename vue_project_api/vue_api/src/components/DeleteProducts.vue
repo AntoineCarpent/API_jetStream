@@ -4,16 +4,16 @@ import axios from "axios";
 export default {
   methods: {
     deleteProduct() {
+      const token = localStorage.getItem('token')
       const productId = this.$route.params.id;
       axios
           .delete(`http://127.0.0.1:8000/api/v1/products/${productId}`,{
             headers: {
-              Authorization: `Bearer 3|LOIHy4tRRlrNYdGQf4wFLfnQtLe2KqGeOMBH1jRL7937f2ee`
-            }
+              Authorization: `Bearer ${token}`,            }
           })
           .then((response) => console.log(response))
-      this.$router.push({ path: '/' })
           .catch((error) => console.error(error));
+          this.$router.push({ path: '/products' })
     }
   }
 };

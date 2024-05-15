@@ -1,11 +1,19 @@
 <script setup>
 import TheWelcome from '../components/TheWelcome.vue'
-import Categories  from '../components/Categories.vue'
 </script>
 
 <template>
   <main>
     <TheWelcome />
-    <Categories />
   </main>
+  <nav>
+    <RouterLink to="/login">Login</RouterLink>
+    <RouterLink to="/register">Register</RouterLink>
+  </nav>
 </template>
+<style>
+nav{
+  display: flex;
+  justify-content: space-evenly;
+}
+</style>

@@ -17,16 +17,17 @@ export default {
   },
   methods: {
     updateProduct() {
+      const token = localStorage.getItem('token')
       const productId = this.$route.params.id;
       axios
-          .put(`http://127.0.0.1:8000/api/v1/products/${productId}`, this.productData,{
+          .put(`http://127.0.0.1:8000/api/v1/products/${productId}`, this.productData, {
             headers: {
-              Authorization: `Bearer 3|LOIHy4tRRlrNYdGQf4wFLfnQtLe2KqGeOMBH1jRL7937f2ee`
+              Authorization: `Bearer ${token}`,
             }
           })
           .then((response) => console.log(response))
-      this.$router.push({ path: '/' })
           .catch((error) => console.error(error));
+      this.$router.push({path: '/products'})
     }
   }
 }
@@ -54,11 +55,11 @@ export default {
       </div>
       <div>
         <label for="image">Image: </label>
-        <input type="file" id="image" >
+        <input type="file" id="image">
       </div>
       <div>
         <label for="category">Categorie: </label>
-        <input type="number" id="category"  v-model="productData.category">
+        <input type="number" id="category" v-model="productData.category">
       </div>
       <button>Modifier</button>
     </form>
@@ -66,8 +67,25 @@ export default {
 </template>
 
 <style scoped>
-html,body{margin:0;padding:0}
-section{height:100vh;display:grid;justify-items:center;padding-top:40px}
-div{margin:24px auto}
-label{font-weight:bolder;display:block;margin-bottom:4px}
+html, body {
+  margin: 0;
+  padding: 0
+}
+
+section {
+  height: 100vh;
+  display: grid;
+  justify-items: center;
+  padding-top: 40px
+}
+
+div {
+  margin: 24px auto
+}
+
+label {
+  font-weight: bolder;
+  display: block;
+  margin-bottom: 4px
+}
 </style>

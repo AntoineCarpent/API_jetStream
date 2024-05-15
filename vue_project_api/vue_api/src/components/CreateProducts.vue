@@ -1,48 +1,61 @@
 <script>
 import axios from "axios";
+import Categories from "@/components/Categories.vue";
 
 export default {
+  components: {Categories},
   data() {
     return {
-    productData: {
-      name: '',
-      description: '',
-      price: 0,
-      stock: 0,
-      image: null,
+      productData: {
+        name: '',
+        description: '',
+        price: 0,
+        stock: 0,
+        image: null,
+      },
+      categories: []
     }
-  }
-},
-methods: {
-  onFileChange(event) {
-    this.postData.image = event.target.files[0];
   },
-  createProduct() {
-    const formData = new FormData();
-    formData.append('title', this.postData.title);
-    formData.append('content', this.postData.content);
-    formData.append('image', this.postData.image);
+  methods: {
+    onFileChange(event) {
+      this.productData.image = event.target.files[0];
+    },
+    createProduct() {
+      const token = localStorage.getItem('token')
+      const formData = new FormData();
+      formData.append('name', this.productData.name);
+      formData.append('description', this.productData.description);
+      formData.append('image', this.productData.image);
+      formData.append('price', this.productData.price);
+      formData.append('stock', this.productData.stock);
       axios
-        .post('http://127.0.0.1:8000/api/v1/products', this.productData,{
-          headers: {
-            Authorization: `Bearer 5|MlWAOHoSBBwmECHEvUSfScjkz2K1ehifQJtHaSmY51ff9d82`
-          }
-        })
-        .then((response) => console.log(response))
-    this.$router.push({ path: '/' })
-          .catch((error) => console.error(error));
+          .post('http://127.0.0.1:8000/api/v1/products', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${token}`,
+            }
+          })
+          .then((response) => {
+            console.log(response);
+            this.$router.push({ path: '/products' });
+          })
+          .catch((error) => {
+            console.error(error);
+          });
     }
   }
 }
 </script>
 
+
 <template>
-  <div v-for="category in categories" :key="category.id">
-    <p>{{category.name}}</p>
-  </div>
   <h1>Ajoutée un produit</h1>
   <section>
     <form @submit.prevent="createProduct">
+        <label>Categories</label>
+      <div v-for="category in categories" :key="category.id">
+        <input type="checkbox">{{category.data}}
+      </div>
       <div>
         <label for="name">Name: </label>
         <input type="text" id="name" v-model="productData.name">

@@ -14,6 +14,7 @@ use App\Http\Requests\StoreProductsRequest;
 use App\Http\Requests\UpdateProductsRequest;
 use App\Http\Resources\ProductsResource;
 use App\Models\Products;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class ProductsController extends Controller
@@ -183,9 +184,54 @@ class ProductsController extends Controller
         if (request('image')){
 
             $products->update([
-
-                'image' => request('image')->store('image', 'public'),
+                $imagePath = request('image')->store('image','public'),
+                $products->image = 'storage/' . $imagePath,
             ]);
         }
+    }
+    /**
+     * @OA\Get(
+     *     path="/api/v1/products/category/{id}",
+     *     summary="Get products by category",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the category",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of products by category",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/Products")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Category not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string"),
+     *         )
+     *     )
+     * )
+     */
+    public function productcategory($id)
+    {
+        $products = Products::whereHas('categories', function ($query) use ($id) {
+            $query->where('category_id', $id);
+        })->latest()->paginate(5);
+
+        if ($products->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Category not found'
+            ], 404);
+        }
+
+        return ProductsResource::collection($products);
     }
 }

@@ -146,6 +146,7 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $categories = Category::find($id);
+        $categories->products()->detach();
         $categories->delete();
         return response(null, 204);
     }

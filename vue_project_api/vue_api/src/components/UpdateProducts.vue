@@ -9,25 +9,32 @@ export default {
         description: this.$route.params.description,
         price: this.$route.params.price,
         stock: this.$route.params.stock,
-        image: '',
-        category: 0,
+        image: null,
 
       }
     }
   },
   methods: {
+    onFileChange(event) {
+      this.productData.image = event.target.files[0];
+    },
     updateProduct() {
       const token = localStorage.getItem('token')
       const productId = this.$route.params.id;
       axios
-          .put(`http://127.0.0.1:8000/api/v1/products/${productId}`, this.productData, {
+          .post(`http://127.0.0.1:8000/api/v1/products/${productId}?_method=PUT`, this.productData, {
             headers: {
               Authorization: `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data'
             }
           })
-          .then((response) => console.log(response))
-          .catch((error) => console.error(error));
-      this.$router.push({path: '/products'})
+          .then((response) => {
+            console.log(response);
+            this.$router.push({path: '/products'});
+          })
+          .catch((error) => {
+            console.error(error);
+        });
     }
   }
 }
@@ -54,14 +61,11 @@ export default {
         <input type="number" id="stock" v-model="productData.stock">
       </div>
       <div>
-        <label for="image">Image: </label>
-        <input type="file" id="image">
-      </div>
-      <div>
-        <label for="category">Categorie: </label>
-        <input type="number" id="category" v-model="productData.category">
+        <input type="file" @change="onFileChange">
       </div>
       <button>Modifier</button>
+      <button><router-link to="/products" class="cancel">Cancel</router-link></button>
+
     </form>
   </section>
 </template>
@@ -87,5 +91,8 @@ label {
   font-weight: bolder;
   display: block;
   margin-bottom: 4px
+}
+.cancel{
+  color: white;
 }
 </style>

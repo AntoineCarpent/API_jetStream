@@ -9,7 +9,7 @@ export default {
         email: '',
         name: '',
         password: '',
-        confirmPassword: '',
+        password_confirmation: '',
       }
     }
   },
@@ -19,14 +19,13 @@ export default {
           .post('http://127.0.0.1:8000/api/v1/users/register', this.User, {
             headers: {
               'Accept': 'application/json',
-              'Content-Type': 'application/json'
             }
           })
           .then(response => {
             console.log(response);
             const token = response.data.token;
             localStorage.setItem('token', token);
-            this.$router.push('/products');
+            this.$router.push('/login');
           })
           .catch(error => {
             console.error(error);
@@ -57,7 +56,7 @@ export default {
       </div>
       <div>
         <label for="password">Confirmation mot de passe </label>
-        <input type="password" id="password" rows="6" cols="22" v-model="User.confirmPassword">
+        <input type="password" id="password" rows="6" cols="22" v-model="User.password_confirmation">
       </div>
       <button type="submit" class="button">
         Créer mon compte

@@ -24,6 +24,7 @@ Route::prefix('v1')->group(function () {
     Route::Resource('users', UsersController::class)->middleware('auth:sanctum');
     Route::post('/users/register', UsersController::class . '@store')->name('register.user');
     Route::post('/users/login', UsersController::class . '@login')->name('login.user');
+
     Route::get('/product/category/{id}', ProductsController::class . '@productcategory')->name('product.category');
 
     Route::Resource('categories', CategoryController::class)->middleware('auth:sanctum');

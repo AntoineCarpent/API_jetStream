@@ -17,7 +17,7 @@ import SupportIcon from './icons/IconSupport.vue'
     </div>
   </header>
 <h1>Bienvenue</h1>
-  <h2>Veuillez vous connecter</h2>
+  <h2>Veuillez vous connecter ou vous enregistrez</h2>
 </template>
 
 <style>

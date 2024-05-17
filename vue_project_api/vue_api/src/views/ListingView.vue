@@ -4,24 +4,29 @@ import ProductListing from "../components/ProductListing.vue";
 import Categories from "../components/Categories.vue";
 
 export default defineComponent({
-  components: {Categories, ProductListing}
-})
+  components: {Categories, ProductListing},
+  methods: {
+    logout() {
+      localStorage.removeItem("token");
+      this.$router.push({path: '/login'})
+    }
+  }
+});
+
 
 </script>
 
 <template>
   <nav>
-    <RouterLink to="/products">Go to Home</RouterLink>
     <RouterLink to="/createProducts">Ajouté un produit</RouterLink>
-    <RouterLink to="/category">Categorie</RouterLink>
+    <button @click="logout">Déconnexion</button>
   </nav>
   <main>
-    <ProductListing />
-    <Categories />
+    <ProductListing/>
+    <Categories/>
   </main>
 
 </template>
 
-<style scoped>
-
+<style>
 </style>

@@ -12,8 +12,7 @@ export default {
         price: 0,
         stock: 0,
         image: null,
-      },
-      categories: []
+      }
     }
   },
   methods: {
@@ -52,10 +51,6 @@ export default {
   <h1>Ajoutée un produit</h1>
   <section>
     <form @submit.prevent="createProduct">
-        <label>Categories</label>
-      <div v-for="category in categories" :key="category.id">
-        <input type="checkbox">{{category.data}}
-      </div>
       <div>
         <label for="name">Name: </label>
         <input type="text" id="name" v-model="productData.name">
@@ -77,6 +72,7 @@ export default {
       </div>
 
       <button>Ajouté</button>
+      <button><router-link to="/products" class="cancel">Cancel</router-link></button>
     </form>
   </section>
 </template>
@@ -86,4 +82,7 @@ html,body{margin:0;padding:0}
 section{height:100vh;display:grid;justify-items:center;padding-top:40px}
 div{margin:24px auto}
 label{font-weight:bolder;display:block;margin-bottom:4px}
+.cancel{
+  color: white;
+}
 </style>

@@ -108,5 +108,7 @@ button {
   color: white;
   background: #181818;
   border-radius: 20px;
+  margin: 10px;
+
 }
 </style>

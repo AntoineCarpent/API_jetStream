@@ -17,10 +17,14 @@ export default defineComponent({
 </script>
 
 <template>
-  <nav>
-    <RouterLink to="/createProducts">Ajouté un produit</RouterLink>
-    <button @click="logout">Déconnexion</button>
-  </nav>
+  <header>
+    <img alt="Vue logo" class="logo" src="../assets/logo.svg" width="125" height="125"/>
+    
+    <nav>
+      <button><RouterLink to="/createProducts" class="add-products">Ajouté un produit</RouterLink></button>
+      <button @click="logout">Déconnexion</button>
+    </nav>
+  </header>
   <main>
     <ProductListing/>
     <Categories/>
@@ -29,4 +33,10 @@ export default defineComponent({
 </template>
 
 <style>
+header{
+  margin: 10px;
+}
+.add-products{
+  color: white;
+}
 </style>

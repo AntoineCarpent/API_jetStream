@@ -41,9 +41,13 @@ export default {
 </script>
 
 <template>
+  <header>
+    <img alt="Vue logo" class="logo" src="../assets/logo.svg" width="125" height="125"/>
+
+  </header>
   <h1>Modifier un produit</h1>
   <section>
-    <form @submit.prevent="updateProduct">
+    <form @submit.prevent="updateProduct" class="card">
       <div>
         <label for="name">Name: </label>
         <input type="text" id="name" v-model="productData.name">
@@ -63,8 +67,10 @@ export default {
       <div>
         <input type="file" @change="onFileChange">
       </div>
-      <button>Modifier</button>
-      <button><router-link to="/products" class="cancel">Cancel</router-link></button>
+      <div class="button-card">
+        <button>Modifier</button>
+        <button><router-link to="/products" class="cancel">Cancel</router-link></button>
+      </div>
 
     </form>
   </section>

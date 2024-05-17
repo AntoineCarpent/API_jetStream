@@ -36,7 +36,7 @@ export default {
 </script>
 
 <template>
-  <section>
+  <section class="card">
     <h1>Inscription</h1>
     <p>Tu as déjà un compte ?
       <RouterLink to="/login">Se connecter</RouterLink>
@@ -44,19 +44,19 @@ export default {
     <form @submit.prevent="createAccount">
       <div>
         <label for="email">Email </label>
-        <input type="text" id="email" v-model="User.email">
+        <br><input type="text" id="email" v-model="User.email">
       </div>
       <div>
         <label for="name">Nom </label>
-        <input type="text" id="name" v-model="User.name">
+        <br><input type="text" id="name" v-model="User.name">
       </div>
       <div>
         <label for="password">Mot de passe </label>
-        <input type="password" id="password" rows="6" cols="22" v-model="User.password">
+        <br><input type="password" id="password" rows="6" cols="22" v-model="User.password">
       </div>
       <div>
         <label for="password">Confirmation mot de passe </label>
-        <input type="password" id="password" rows="6" cols="22" v-model="User.password_confirmation">
+        <br><input type="password" id="password" rows="6" cols="22" v-model="User.password_confirmation">
       </div>
       <button type="submit" class="button">
         Créer mon compte
@@ -65,6 +65,10 @@ export default {
   </section>
 </template>
 
-<style scoped>
-
+<style>
+section{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>

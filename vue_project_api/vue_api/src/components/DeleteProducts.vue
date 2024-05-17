@@ -20,9 +20,13 @@ export default {
 </script>
 
 <template>
+  <header>
+    <img alt="Vue logo" class="logo" src="../assets/logo.svg" width="125" height="125"/>
+
+  </header>
 <p>Supprimer ce produit ?</p>
   <button @click = "deleteProduct">Delete</button>
-  <router-link to="/"><button>Cancel</button></router-link>
+  <router-link to="/products"><button>Cancel</button></router-link>
 </template>
 
 <style scoped>
